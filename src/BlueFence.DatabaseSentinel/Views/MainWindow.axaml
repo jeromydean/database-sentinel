@@ -2,21 +2,30 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:vm="using:BlueFence.DatabaseSentinel.ViewModels"
+  xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
   x:Class="BlueFence.DatabaseSentinel.Views.MainWindow"
   x:DataType="vm:MainWindowViewModel"
   Icon="/Assets/avalonia-logo.ico"
-  Title="BlueFence.DatabaseSentinel">
+  Title="BlueFence Database Sentinel">
   <Design.DataContext>
     <!-- This only sets the DataContext for the previewer in an IDE,
     to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainWindowViewModel/>
   </Design.DataContext>
 
-  <TextBlock
-    Text="{Binding Greeting}"
-    HorizontalAlignment="Center"
-    VerticalAlignment="Center" />
+  <Grid RowDefinitions="Auto,*">
+    <TextBlock
+      Grid.Row="0"
+      Text="{Binding Greeting}"
+      Margin="16,12"
+      FontSize="18" />
+    <lvc:CartesianChart
+      Grid.Row="1"
+      Series="{Binding DashboardSeries}"
+      Margin="16,0,16,16"
+      MinHeight="280" />
+  </Grid>
 </Window>
