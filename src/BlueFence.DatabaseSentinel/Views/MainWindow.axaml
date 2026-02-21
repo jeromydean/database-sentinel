@@ -3,29 +3,161 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:vm="using:BlueFence.DatabaseSentinel.ViewModels"
   xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+  xmlns:svg="clr-namespace:Avalonia.Svg.Skia;assembly=Svg.Controls.Skia.Avalonia"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+  mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
   x:Class="BlueFence.DatabaseSentinel.Views.MainWindow"
   x:DataType="vm:MainWindowViewModel"
   Icon="/Assets/avalonia-logo.ico"
-  Title="BlueFence Database Sentinel">
+  Title="{Binding AppTitle}"
+  Width="1000"
+  Height="650"
+  MinWidth="800"
+  MinHeight="500">
   <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
-    to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainWindowViewModel/>
   </Design.DataContext>
 
-  <Grid RowDefinitions="Auto,*">
-    <TextBlock
+  <Grid RowDefinitions="Auto,*" ColumnDefinitions="200,*">
+    <!-- Header -->
+    <Border
       Grid.Row="0"
-      Text="{Binding Greeting}"
-      Margin="16,12"
-      FontSize="18" />
-    <lvc:CartesianChart
+      Grid.Column="0"
+      Grid.ColumnSpan="2"
+      Background="#2D2D30"
+      Padding="20,14">
+      <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+        <svg:Svg
+          Path="avares://BlueFence.DatabaseSentinel/Assets/logo.svg"
+          Width="32"
+          Height="32" />
+        <TextBlock
+          Text="{Binding AppTitle}"
+          FontSize="20"
+          FontWeight="SemiBold"
+          Foreground="White"
+          VerticalAlignment="Center" />
+      </StackPanel>
+    </Border>
+
+    <!-- Sidebar -->
+    <Border
       Grid.Row="1"
-      Series="{Binding DashboardSeries}"
-      Margin="16,0,16,16"
-      MinHeight="280" />
+      Grid.Column="0"
+      Background="#F0F0F0"
+      BorderBrush="#E0E0E0"
+      BorderThickness="0,0,1,0">
+      <StackPanel Margin="0,16,0,0" Spacing="2">
+        <Border
+          Background="#0078D4"
+          Padding="16,10"
+          Margin="8,0">
+          <TextBlock
+            Text="Dashboard"
+            Foreground="White"
+            FontWeight="SemiBold" />
+        </Border>
+        <Border Padding="16,10" Margin="8,0" Background="Transparent">
+          <TextBlock Text="Servers" Foreground="#333333" />
+        </Border>
+        <Border Padding="16,10" Margin="8,0" Background="Transparent">
+          <TextBlock Text="Alerts" Foreground="#333333" />
+        </Border>
+      </StackPanel>
+    </Border>
+
+    <!-- Main content -->
+    <ScrollViewer
+      Grid.Row="1"
+      Grid.Column="1"
+      Background="White">
+      <StackPanel Margin="24,20" Spacing="20">
+        <TextBlock
+          Text="{Binding PageTitle}"
+          FontSize="24"
+          FontWeight="SemiBold"
+          Foreground="#333333" />
+
+        <!-- Summary cards row -->
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+          <Border
+            Grid.Column="0"
+            Background="#F8F9FA"
+            BorderBrush="#E9ECEF"
+            BorderThickness="1"
+            CornerRadius="4"
+            Padding="20">
+            <StackPanel Spacing="8">
+              <TextBlock
+                Text="Monitored servers"
+                FontSize="12"
+                Foreground="#6C757D" />
+              <TextBlock
+                Text="{Binding MonitoredServerCount}"
+                FontSize="28"
+                FontWeight="SemiBold"
+                Foreground="#212529" />
+              <TextBlock
+                Text="{Binding ServerStatusSummary}"
+                FontSize="12"
+                Foreground="#6C757D"
+                TextWrapping="Wrap"
+                MaxWidth="280" />
+            </StackPanel>
+          </Border>
+          <Border
+            Grid.Column="1"
+            Background="#F8F9FA"
+            BorderBrush="#E9ECEF"
+            BorderThickness="1"
+            CornerRadius="4"
+            Padding="20">
+            <StackPanel Spacing="8">
+              <TextBlock
+                Text="Active alerts"
+                FontSize="12"
+                Foreground="#6C757D" />
+              <TextBlock
+                Text="{Binding ActiveAlertCount}"
+                FontSize="28"
+                FontWeight="SemiBold"
+                Foreground="#212529" />
+              <TextBlock
+                Text="{Binding AlertSummary}"
+                FontSize="12"
+                Foreground="#6C757D"
+                TextWrapping="Wrap"
+                MaxWidth="280" />
+            </StackPanel>
+          </Border>
+        </Grid>
+
+        <!-- Activity chart card -->
+        <Border
+          Background="#F8F9FA"
+          BorderBrush="#E9ECEF"
+          BorderThickness="1"
+          CornerRadius="4"
+          Padding="20">
+          <StackPanel Spacing="12">
+            <TextBlock
+              Text="Recent activity"
+              FontSize="14"
+              FontWeight="SemiBold"
+              Foreground="#333333" />
+            <TextBlock
+              Text="CPU/Memory/Wait metrics (sample data)"
+              FontSize="12"
+              Foreground="#6C757D"
+              Margin="0,0,0,8" />
+            <lvc:CartesianChart
+              Series="{Binding ActivitySeries}"
+              VerticalAlignment="Stretch"
+              MinHeight="260" />
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </ScrollViewer>
   </Grid>
 </Window>

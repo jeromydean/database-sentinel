@@ -14,6 +14,10 @@ A database monitoring application. Planned capabilities include real-time health
 [![.NET](https://img.shields.io/badge/.NET-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![Avalonia](https://img.shields.io/badge/Avalonia-8322F6?style=flat-square)](https://avaloniaui.net/)
 
+### Dashboard
+
+<img src="src/images/dashboard.png" alt="Database Sentinel dashboard" width="800" />
+
 ## 🎯 Goals
 
 - Monitor database servers (health, performance, availability).

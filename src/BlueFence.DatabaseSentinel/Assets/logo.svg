@@ -1,0 +1,40 @@
+<svg width="256" height="295" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg1" x1="0" y1="0" x2="200" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6ea8d8"/>
+      <stop offset="30%" stop-color="#2672b0"/>
+      <stop offset="60%" stop-color="#1450a0"/>
+      <stop offset="100%" stop-color="#0b3270"/>
+    </linearGradient>
+    <linearGradient id="ed1" x1="0" y1="0" x2="0" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#a8d4ff"/>
+      <stop offset="40%" stop-color="#4488cc"/>
+      <stop offset="100%" stop-color="#1040a0"/>
+    </linearGradient>
+    <filter id="sh1" x="-15%" y="-5%" width="130%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000820" flood-opacity="0.7"/>
+    </filter>
+    <mask id="m1" maskUnits="userSpaceOnUse">
+      <path d="M100 22 C100 22 163 39 169 45 L169 120 C169 163 136 194 100 210 C64 194 31 163 31 120 L31 45 C37 39 100 22 100 22 Z" fill="white"/>
+    </mask>
+  </defs>
+  <!-- Shield base -->
+  <path d="M100 10 C100 10 172 31 178 37 L178 122 C178 168 142 201 100 218 C58 201 22 168 22 122 L22 37 C28 31 100 10 100 10 Z" fill="url(#bg1)"/>
+  <!-- DB masked to shield interior -->
+  <g mask="url(#m1)">
+    <g transform="translate(23, 33) scale(0.15)">
+      <path d="M117 608.4v178.5c1.5 93.7 155.7 169.5 395 169.5s393.4-75.8 395-169.5V608.4H117z" fill="#1B9BDB"/>
+      <path d="M907 607.7c0 99.4-154.8 180-395 180s-395-80.6-395-180 154.8-180 395-180 395 80.5 395 180z" fill="#FFFFFF"/>
+      <path d="M117 428.4v158.5c1.5 93.7 155.7 179.5 395 179.5s393.4-85.8 395-179.5V428.4H117z" fill="#1B9BDB"/>
+      <path d="M907 427.7c0 99.4-154.8 180-395 180s-395-80.6-395-180 154.8-180 395-180 395 80.5 395 180z" fill="#FFFFFF"/>
+      <path d="M117 248.4v158.5c1.5 93.7 155.7 179.5 395 179.5s393.4-85.8 395-179.5V248.4H117z" fill="#1B9BDB"/>
+      <path d="M907 247.7c0 99.4-154.8 180-395 180s-395-80.6-395-180 154.8-180 395-180 395 80.5 395 180z" fill="#3ED6FF"/>
+    </g>
+  </g>
+  <!-- Shield edge highlight shimmer -->
+  <path d="M100 10 C100 10 172 31 178 37 L178 122 C178 168 142 201 100 218 C58 201 22 168 22 122 L22 37 C28 31 100 10 100 10 Z" fill="none" stroke="#6ab4e8" stroke-width="12" opacity="0.15"/>
+  <!-- Inner bevel -->
+  <path d="M100 22 C100 22 163 39 169 45 L169 120 C169 163 136 194 100 210 C64 194 31 163 31 120 L31 45 C37 39 100 22 100 22 Z" fill="none" stroke="#a8d4ff" stroke-width="1.5" opacity="0.45"/>
+  <!-- Outer stroke -->
+  <path d="M100 10 C100 10 172 31 178 37 L178 122 C178 168 142 201 100 218 C58 201 22 168 22 122 L22 37 C28 31 100 10 100 10 Z" fill="none" stroke="url(#ed1)" stroke-width="3"/>
+</svg>
