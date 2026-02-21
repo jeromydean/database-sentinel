@@ -37,7 +37,24 @@ A database monitoring application. Planned capabilities include real-time health
 
 ## 🚀 Getting Started
 
-Requirements and run instructions will be added as the solution stabilizes.
+### Keycloak and PostgreSQL (Docker / Podman)
+
+Developers run Keycloak with **HTTPS** in dev. One-time: generate a self-signed certificate (PowerShell as Administrator), then start the stack:
+
+```powershell
+.\docker\generate-certificate.ps1
+```
+
+```bash
+docker compose up -d   # or: podman compose up -d
+```
+
+- **Keycloak**: https://localhost:8443 (admin / admin). Used for identity and API auth.
+- **PostgreSQL**: localhost:5432. Hosts Keycloak’s DB and the **sentinel** DB used by the API for metrics.
+
+See [docker/README.md](docker/README.md) for connection strings, Podman troubleshooting, and **production deployment** (do not use the dev cert or this compose as-is in production).
+
+Other requirements and run instructions will be added as the solution stabilizes.
 
 ## 📄 License
 

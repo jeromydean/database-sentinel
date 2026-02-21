@@ -1,3 +1,4 @@
+using BlueFence.DatabaseSentinel.Services;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
@@ -5,6 +6,13 @@ namespace BlueFence.DatabaseSentinel.ViewModels
 {
   public partial class MainWindowViewModel : ViewModelBase
   {
+    private readonly IAuthService _authService;
+
+    public MainWindowViewModel(IAuthService authService)
+    {
+      _authService = authService;
+    }
+
     public string AppTitle { get; } = "Database Sentinel";
 
     public string PageTitle { get; } = "Dashboard";
