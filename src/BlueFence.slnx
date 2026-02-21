@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="BlueFence.DatabaseSentinel.Api/BlueFence.DatabaseSentinel.Api.csproj" />
+  <Project Path="BlueFence.DatabaseSentinel/BlueFence.DatabaseSentinel.csproj" />
+</Solution>
