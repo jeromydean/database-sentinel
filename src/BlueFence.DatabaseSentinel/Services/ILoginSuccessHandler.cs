@@ -4,8 +4,12 @@ namespace BlueFence.DatabaseSentinel.Services
 {
   public interface ILoginSuccessHandler
   {
-    void SetLoginWindow(Window window);
+    event Action? LoginSucceeded;
+
+    void SetMainWindow(Window window);
 
     void OnLoginSucceeded();
+
+    void ShowMainWindow();
   }
 }

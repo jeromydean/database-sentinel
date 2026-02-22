@@ -45,7 +45,7 @@ This creates:
 
 - **Realm**: `database-sentinel`
 - **API client**: `database-sentinel-api` (confidential) – for the API to validate tokens; get its secret in Keycloak Admin → Clients → database-sentinel-api → Credentials
-- **UI client**: `database-sentinel-ui` (public) – for the Avalonia app (login flows)
+- **UI client**: `database-sentinel-ui` (public) – for the Avalonia app and Swagger UI (Auth Code + PKCE). Redirect URIs: `http://localhost:46421`, `http://127.0.0.1:46421` (desktop), `https://localhost:7229/swagger/oauth2-redirect.html`, `http://localhost:5210/swagger/oauth2-redirect.html` (Swagger). An **Audience** protocol mapper is added so access tokens include `database-sentinel-api` (required for the API to accept the token).
 - **Realm role**: `sentinel-admin`
 - **Initial user**: `dsadmin` / `dsadmin` – created in the realm with the `sentinel-admin` role so you can sign in from the app immediately
 

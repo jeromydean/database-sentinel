@@ -13,7 +13,7 @@ namespace BlueFence.DatabaseSentinel.Api
       builder.Services.AddControllers();
       builder.Services.AddOpenApi(options =>
       {
-        options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+        options.AddDocumentTransformer<OAuth2SecuritySchemeTransformer>();
       });
 
       IConfigurationSection keycloakSection = builder.Configuration.GetSection("Keycloak");
@@ -40,19 +40,23 @@ namespace BlueFence.DatabaseSentinel.Api
       builder.Services.AddAuthorization();
 
       builder.Services.AddEndpointsApiExplorer();
-      builder.Services.AddHttpClient("KeycloakDev").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-      {
-        ServerCertificateCustomValidationCallback = (_, _, _, _) => true
-      });
 
       WebApplication app = builder.Build();
 
       if (app.Environment.IsDevelopment())
       {
         app.MapOpenApi();
+        string clientId = keycloakSection["SwaggerClientId"] ?? "database-sentinel-ui";
+        string? redirectUrl = builder.Configuration["Keycloak:SwaggerRedirectUrl"];
         app.UseSwaggerUI(options =>
         {
           options.SwaggerEndpoint("/openapi/v1.json", "Database Sentinel API v1");
+          options.OAuthClientId(clientId);
+          options.OAuthUsePkce();
+          if (!string.IsNullOrEmpty(redirectUrl))
+          {
+            options.OAuth2RedirectUrl(redirectUrl);
+          }
         });
       }
 

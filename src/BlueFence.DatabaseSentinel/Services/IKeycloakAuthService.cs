@@ -5,6 +5,9 @@ namespace BlueFence.DatabaseSentinel.Services
 {
   public interface IKeycloakAuthService
   {
-    Task<bool> LoginAsync(string username, string password, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Starts the interactive Authorization Code + PKCE flow (opens system browser on Windows).
+    /// </summary>
+    Task<bool> LoginAsync(CancellationToken cancellationToken = default);
   }
 }

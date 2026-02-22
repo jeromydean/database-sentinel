@@ -6,8 +6,9 @@ using Microsoft.OpenApi;
 namespace BlueFence.DatabaseSentinel.Api.OpenApi
 {
   /// <summary>
-  /// Adds JWT Bearer security scheme and requirement to the OpenAPI document when Bearer authentication is registered.
-  /// Enables the "Authorize" button in Swagger UI so you can paste a token for testing.
+  /// Adds a JWT Bearer (paste-token) security scheme to the OpenAPI document when Bearer authentication is registered.
+  /// Not used by default: Swagger uses OAuth2 (Authorization Code + PKCE) via <see cref="OAuth2SecuritySchemeTransformer"/>.
+  /// Register this transformer in AddOpenApi only if you also want to allow manually pasting a token in Swagger.
   /// </summary>
   internal sealed class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider)
     : IOpenApiDocumentTransformer
@@ -28,7 +29,7 @@ namespace BlueFence.DatabaseSentinel.Api.OpenApi
         Scheme = "bearer",
         In = ParameterLocation.Header,
         BearerFormat = "JWT",
-        Description = "Paste a Keycloak access token. Use POST /dev/token (Development only) to get one."
+        Description = "Optional: paste a Keycloak access token here. By default use Authorize to sign in with OAuth2 + PKCE."
       };
 
       OpenApiSecuritySchemeReference bearerRef = new OpenApiSecuritySchemeReference("Bearer", document);

@@ -32,12 +32,12 @@ A database monitoring application. Planned capabilities include real-time health
 
 ## 📁 Repository Structure
 
-- `src/BlueFence.DatabaseSentinel.Api` – ASP.NET Core API (current entry point).
-- `src/BlueFence.DatabaseSentinel` – Avalonia-based user interface.
+- `src/BlueFence.DatabaseSentinel.Api` – ASP.NET Core API (JWT auth, Swagger with OAuth2 + PKCE).
+- `src/BlueFence.DatabaseSentinel` – Avalonia desktop UI (Auth Code + PKCE via MSAL; no login window shown until after sign-in).
 
 ## 🚀 Getting Started
 
-### Keycloak and PostgreSQL (Docker / Podman)
+### Keycloak, PostgreSQL and pgAdmin (Docker / Podman)
 
 Developers run Keycloak with **HTTPS** in dev. One-time: generate a self-signed certificate (PowerShell as Administrator), then start the stack:
 
@@ -51,10 +51,11 @@ docker compose up -d   # or: podman compose up -d
 
 - **Keycloak**: https://localhost:8443 (admin / admin). Used for identity and API auth.
 - **PostgreSQL**: localhost:5432. Hosts Keycloak’s DB and the **sentinel** DB used by the API for metrics.
+- **pgAdmin**: http://localhost:5050 (admin@example.com / admin).
 
 See [docker/README.md](docker/README.md) for connection strings, Podman troubleshooting, and **production deployment** (do not use the dev cert or this compose as-is in production).
 
-Other requirements and run instructions will be added as the solution stabilizes.
+After Keycloak is up, run the one-time setup script (see docker/README.md), then run the API and the Avalonia app from the `src` folder (e.g. open `BlueFence.slnx` in Visual Studio and run the desired project, or `dotnet run` from each project directory). The API serves Swagger at `/swagger` when running in Development; the desktop app signs in via the browser (MSAL) with no app window shown until authentication succeeds.
 
 ## 📄 License
 

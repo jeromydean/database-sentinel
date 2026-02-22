@@ -1,45 +1,38 @@
-using System;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using BlueFence.DatabaseSentinel.ViewModels;
-using BlueFence.DatabaseSentinel.Views;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BlueFence.DatabaseSentinel.Services
 {
   public class LoginSuccessHandler : ILoginSuccessHandler
   {
     private readonly IClassicDesktopStyleApplicationLifetime _desktop;
-    private readonly IServiceProvider _serviceProvider;
-    private Window? _loginWindow;
+    private Window? _mainWindow;
 
-    public LoginSuccessHandler(
-      IClassicDesktopStyleApplicationLifetime desktop,
-      IServiceProvider serviceProvider)
+    public LoginSuccessHandler(IClassicDesktopStyleApplicationLifetime desktop)
     {
       _desktop = desktop;
-      _serviceProvider = serviceProvider;
     }
 
-    public void SetLoginWindow(Window window)
+    public event Action? LoginSucceeded;
+
+    public void SetMainWindow(Window window)
     {
-      _loginWindow = window;
+      _mainWindow = window;
     }
 
     public void OnLoginSucceeded()
     {
-      if (_loginWindow is null)
-      {
-        return;
-      }
+      LoginSucceeded?.Invoke();
+      ShowMainWindow();
+    }
 
-      MainWindow mainWindow = new MainWindow
-      {
-        DataContext = _serviceProvider.GetRequiredService<MainWindowViewModel>()
-      };
-      mainWindow.Show();
-      _desktop.MainWindow = mainWindow;
-      _loginWindow.Close();
+    public void ShowMainWindow()
+    {
+      if (_mainWindow is null) return;
+      _desktop.MainWindow = _mainWindow;
+      _desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
+      _mainWindow.Show();
+      _mainWindow.Activate();
     }
   }
 }

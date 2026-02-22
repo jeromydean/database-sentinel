@@ -147,10 +147,32 @@ if ($existingClients.clientId -contains $ApiClientId) {
   Write-Host "Client created. Retrieve its secret in Keycloak: Realm -> Clients -> $ApiClientId -> Credentials." -ForegroundColor Green
 }
 
-# Create UI client (public; for Avalonia app, resource owner password or auth code)
+# Create UI client (public; for Avalonia app + Swagger UI - Auth Code + PKCE, redirect to localhost)
+$msalRedirectUris = @(
+  "http://localhost:46421",
+  "http://127.0.0.1:46421",
+  "https://localhost:7229/swagger/oauth2-redirect.html",
+  "http://localhost:5210/swagger/oauth2-redirect.html"
+)
 $existingClients = @(Invoke-KeycloakAdmin -Method Get -Path $clientsPath)
 if ($existingClients.clientId -contains $UiClientId) {
-  Write-Host "Client '$UiClientId' already exists." -ForegroundColor Yellow
+  Write-Host "Client '$UiClientId' already exists. Ensuring redirect URIs for MSAL..." -ForegroundColor Yellow
+  $byClientId = @(Invoke-KeycloakAdmin -Method Get -Path "$clientsPath`?clientId=$UiClientId")
+  $uiClient = $byClientId | Where-Object { $_.clientId -eq $UiClientId } | Select-Object -First 1
+  if (-not $uiClient -or -not $uiClient.id) {
+    Write-Host "Warning: Could not resolve client id for '$UiClientId'. Add redirect URIs manually in Keycloak." -ForegroundColor Yellow
+  } else {
+    $existingRedirects = @($uiClient.redirectUris)
+    $toAdd = $msalRedirectUris | Where-Object { $existingRedirects -notcontains $_ }
+    if ($toAdd.Count -gt 0) {
+      $newRedirects = $existingRedirects + $toAdd
+      $clientPath = "realms/$RealmName/clients/$($uiClient.id)"
+      $full = Invoke-KeycloakAdmin -Method Get -Path $clientPath
+      $full.redirectUris = @($newRedirects)
+      Invoke-KeycloakAdmin -Method Put -Path $clientPath -Body (Get-KeycloakRequestBody -Body $full) | Out-Null
+      Write-Host "Added redirect URI(s) for MSAL." -ForegroundColor Green
+    }
+  }
 } else {
   Write-Host "Creating client '$UiClientId' (public)..." -ForegroundColor Cyan
   Invoke-KeycloakAdmin -Method Post -Path $clientsPath -Body @{
@@ -160,8 +182,35 @@ if ($existingClients.clientId -contains $UiClientId) {
     publicClient              = $true
     directAccessGrantsEnabled = $true
     standardFlowEnabled       = $true
+    redirectUris              = $msalRedirectUris
   } | Out-Null
   Write-Host "Client created." -ForegroundColor Green
+}
+
+# Ensure UI client has an Audience mapper so access tokens include the API audience (fixes "audience 'account' is invalid")
+$byClientId = @(Invoke-KeycloakAdmin -Method Get -Path "$clientsPath`?clientId=$UiClientId")
+$uiClientForMapper = $byClientId | Where-Object { $_.clientId -eq $UiClientId } | Select-Object -First 1
+if ($uiClientForMapper -and $uiClientForMapper.id) {
+  $mapperPath = "realms/$RealmName/clients/$($uiClientForMapper.id)/protocol-mappers/models"
+  $existingMappers = @(Invoke-KeycloakAdmin -Method Get -Path $mapperPath)
+  $hasAudienceMapper = $existingMappers | Where-Object { $_.name -eq "audience-api" } | Select-Object -First 1
+  if (-not $hasAudienceMapper) {
+    Write-Host "Adding Audience mapper to '$UiClientId' (audience: $ApiClientId)..." -ForegroundColor Cyan
+    Invoke-KeycloakAdmin -Method Post -Path $mapperPath -Body @{
+      name           = "audience-api"
+      protocol       = "openid-connect"
+      protocolMapper = "oidc-audience-mapper"
+      config         = @{
+        "included.custom.audience" = $ApiClientId
+        "access.token.claim"       = "true"
+      }
+    } | Out-Null
+    Write-Host "Audience mapper added. Tokens from this client will include aud: $ApiClientId." -ForegroundColor Green
+  } else {
+    Write-Host "Audience mapper already present on '$UiClientId'." -ForegroundColor Yellow
+  }
+} else {
+  Write-Host "Warning: Could not resolve UI client for audience mapper." -ForegroundColor Yellow
 }
 
 # Create realm role: sentinel-admin
