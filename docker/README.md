@@ -64,7 +64,10 @@ Defaults assume Keycloak at https://localhost:8443 and admin/admin; override wit
 ### 4. Access
 
 - **Keycloak Admin**: https://localhost:8443/admin (admin / admin)
-- **PostgreSQL**: localhost:5432
+- **pgAdmin**: http://localhost:5050 (login: admin@example.com / admin). 
+
+  To connect to PostgreSQL: Add New Server → General tab name e.g. "Local", Connection tab: Host `postgres`, Port `5432`, Username `keycloak`, Password `keycloak_db_password` (for Keycloak DB) or Username `sentinel`, Password `sentinel_db_password` (for sentinel DB). Use host `postgres` (the service name), not localhost.
+- **PostgreSQL** (direct): localhost:5432
   - Keycloak DB: `Host=localhost;Port=5432;Database=keycloak;Username=keycloak;Password=keycloak_db_password`
   - API (sentinel): `Host=localhost;Port=5432;Database=sentinel;Username=sentinel;Password=sentinel_db_password`
 
